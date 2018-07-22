@@ -1,0 +1,10 @@
+{
+    "app": {
+        "version": "1.0"
+    },
+    "http": {
+        "scheme": "http",
+        "hostname": "hypercontract.org",
+        "port": 80
+    }
+}

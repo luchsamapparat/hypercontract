@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "8b6cf3f2-e788-4d36-bbe8-8ea5dc64364a",
+		"name": "hypercontract Vocabulary JSON-LD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Vocabulary Root",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2b16ef07-4583-4823-aad9-ce9fcbf95b89",
+						"type": "text/javascript",
+						"exec": [
+							"var defaultContentType = postman.getEnvironmentVariable('defaultContentType');",
+							"var baseUrl = postman.getEnvironmentVariable('baseUrl');",
+							"var defaultContentTypeRegExp = postman.getEnvironmentVariable('defaultContentTypeRegExp');",
+							"var vocabularyRoot = JSON.parse(responseBody);",
+							"",
+							"var graph = vocabularyRoot['@graph'];",
+							"var resources = graph.filter(resource => resource['@id'].startsWith('hyper:'));",
+							"",
+							"tests['status code is 200 OK'] = responseCode.code === 200;",
+							"tests['Content-Type header is ' + defaultContentType] = postman.getResponseHeader('Content-Type').match(defaultContentTypeRegExp);",
+							"tests['graph contains definitions'] = resources.length > 0;",
+							"",
+							"var firstResourceUri = resources[0]['@id'].replace('hyper:', vocabularyRoot['@context'].hyper);",
+							"postman.setEnvironmentVariable('firstResourceUri', firstResourceUri);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "82cbe058-6858-42cf-90ea-6ca6b56611ee",
+						"type": "text/javascript",
+						"exec": [
+							"postman.clearEnvironmentVariables();",
+							"",
+							"var baseUrl = postman.getGlobalVariable('vocabularyBaseUrl');",
+							"",
+							"var mediaType = 'application/ld+json';",
+							"var mediaTypeRegExp = _.escapeRegExp(mediaType).split(';').join('(.*)');",
+							"",
+							"postman.setEnvironmentVariable('defaultAccept', mediaType);",
+							"postman.setEnvironmentVariable('defaultContentType', mediaType);",
+							"postman.setEnvironmentVariable('baseUrl', baseUrl);",
+							"postman.setEnvironmentVariable('defaultContentTypeRegExp', mediaTypeRegExp);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "{{defaultAccept}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Vocabulary Resource",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ff211a31-634f-4a83-b781-0cacaf9d580a",
+						"type": "text/javascript",
+						"exec": [
+							"var defaultContentType = postman.getEnvironmentVariable('defaultContentType');",
+							"var firstResourceUri = postman.getEnvironmentVariable('firstResourceUri');",
+							"var baseUrl = postman.getEnvironmentVariable('baseUrl');",
+							"var defaultContentTypeRegExp = postman.getEnvironmentVariable('defaultContentTypeRegExp');",
+							"",
+							"var resource = JSON.parse(responseBody);",
+							"var resourceUri = resource['@id'].replace('hyper:', baseUrl);",
+							"",
+							"tests['status code is 200 OK'] = responseCode.code === 200;",
+							"tests['Content-Type header is ' + defaultContentType] = postman.getResponseHeader('Content-Type').match(defaultContentTypeRegExp);",
+							"tests['returns the correct resource'] = resourceUri === firstResourceUri;",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3b7e7fc1-28d2-4e94-9c38-01e99e439c9c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "{{defaultAccept}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{firstResourceUri}}",
+					"host": [
+						"{{firstResourceUri}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
