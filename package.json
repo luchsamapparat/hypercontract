@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "ts-node index.ts",
     "start": "node ./dist/index.js",
-    "postinstall": "run-s build",
     "build": "run-s compile copy-assets",
     "copy-assets": "copyfiles **/*.json ./dist -e node_modules/**",
     "compile": "tsc -p .",
@@ -22,6 +21,9 @@
     "url": "https://github.com/hypercontract/hypercontract/issues"
   },
   "homepage": "https://github.com/hypercontract/hypercontract#readme",
+  "engines": {
+    "node": "8"
+  },
   "dependencies": {
     "body-parser": "1.18.3",
     "config": "1.30.0",
