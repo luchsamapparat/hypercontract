@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "ts-node index.ts",
     "start": "node ./dist/index.js",
+    "postinstall": "run-s build", 
     "build": "run-s compile copy-assets",
     "copy-assets": "copyfiles **/*.json ./dist -e node_modules/**",
     "compile": "tsc -p .",
