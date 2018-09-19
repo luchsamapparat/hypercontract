@@ -3,8 +3,8 @@
         "version": "1.0"
     },
     "http": {
-        "scheme": "http",
+        "scheme": "https",
         "hostname": "hypercontract.org",
-        "port": 80
+        "port": 443
     }
 }
