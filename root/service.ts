@@ -1,69 +1,49 @@
-import * as jsonld from 'jsonld';
-import { defaultTo, filter, find, isArray, isEmpty, isUndefined, omit } from 'lodash';
-import { vocabularyContext } from './context';
+import { fromRDF } from 'jsonld';
+import { Quad, Writer } from 'n3';
+import { compactWithDomainContext } from './context';
 import { hyper } from './namespaces';
-import { vocabulary } from './vocabulary';
-
-export type Uri = string;
-export type Context = any;
+import { getVocabularyStore } from './store';
 
 export function getVocabulary() {
-    return addContext(vocabulary, vocabularyContext);
+    return getVocabularyStore()
+        .then(profileStore => profileStore.getAll())
+        .then(quads => toJsonLd(quads));
 }
 
 export function getResource(name: string) {
     const uri = hyper(name);
-
-    const graph = [
-        getResourceByUri(uri),
-        ...getPropertiesByDomain(uri)
-    ];
-
-    if (isEmpty(graph)) {
-        return Promise.resolve(null);
-    }
-
-    return (<Promise<any>> addContext(
-        { '@graph': graph },
-        vocabularyContext
-    ));
+    return getResourceByUri(uri);
 }
 
-function getResourceByUri(uri: Uri) {
-    return find(vocabulary['@graph'], { '@id': uri });
+function getResourceByUri(uri: string) {
+    return getVocabularyStore()
+        .then(profileStore => profileStore.get(uri))
+        .then(quads => toJsonLd(quads));
 }
 
-function getPropertiesByDomain(domainUri: Uri) {
-    return filter(vocabulary['@graph'], (resource: any) => {
-        const domain = resource[`rdfs:domain`];
-        return (
-            isArray(domain) &&
-            (!isUndefined(find(domain, { '@id': domainUri })))
-        );
-    });
+function toJsonLd(quads: Quad[]) {
+    return toGraphObjects(quads)
+        .then(graphObjects => compactWithDomainContext({
+            '@graph': graphObjects
+        }));
 }
 
-function addContext(input: any, context: any) {
-    return compact(input, context);
-}
-
-function compact(input: any, context: Context) {
+function toGraphObjects(quads: Quad[]) {
     return new Promise((resolve, reject) => {
-        const inputContext = defaultTo(input['@context'], {});
+        const writer = new Writer({ format: 'n-quads' });
+        writer.addQuads(quads);
+        writer.end((error, result) => {
+            if (error) {
+                return reject(error);
+            }
 
-        jsonld.compact(
-            omit(input, ['@context']),
-            {
-                ...context,
-                ...inputContext
-            },
-            (error: any, output: any) => {
-                if (error) {
-                    reject(error);
+            fromRDF(result, { format: 'application/n-quads' }, (err, doc) => {
+                if (err) {
+                    return reject(err);
                 }
 
-                resolve(output);
-            }
-        );
+                return resolve(doc);
+            });
+        });
     });
 }

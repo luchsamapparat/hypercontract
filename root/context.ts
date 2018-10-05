@@ -1,9 +1,41 @@
-import { vocabularyBaseUri } from './namespaces';
+import { compact as compactJsonLd } from 'jsonld';
+import { defaultTo, omit } from 'lodash';
+import { prefixes } from './namespaces';
 
-export const vocabularyContext = {
-    owl: 'http://www.w3.org/2002/07/owl#',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-    xsd: 'http://www.w3.org/2001/XMLSchema#',
-    hyper: vocabularyBaseUri
+type Context = any;
+
+const vocabularyContext = {
+    ...prefixes
 };
+
+export function addVocabularyContext(input: any) {
+    return {
+        '@context': vocabularyContext,
+        ...input
+    };
+}
+
+export function compactWithDomainContext(input: any) {
+    return compact(input, vocabularyContext);
+}
+
+function compact(input: any, context: Context) {
+    return new Promise((resolve, reject) => {
+        const inputContext = defaultTo(input['@context'], {});
+
+        compactJsonLd(
+            omit(input, ['@context']),
+            {
+                ...context,
+                ...inputContext
+            },
+            (error: any, output: any) => {
+                if (error) {
+                    reject(error);
+                }
+
+                resolve(output);
+            }
+        );
+    });
+}

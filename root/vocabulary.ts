@@ -1,70 +1,38 @@
+import { addVocabularyContext } from './context';
 import { hyper } from './namespaces';
 import * as rootUris from './uris';
 
-export const vocabulary = {
+export const vocabulary = addVocabularyContext({
     '@graph': [
-        {
-            '@id': '_:genid9',
-            '@type': [
-                'http://www.w3.org/2000/01/rdf-schema#Datatype'
-            ],
-            'http://www.w3.org/2002/07/owl#oneOf': [
-                {
-                    '@list': [
-                        {
-                            '@value': 'DELETE'
-                        },
-                        {
-                            '@value': 'GET'
-                        },
-                        {
-                            '@value': 'HEAD'
-                        },
-                        {
-                            '@value': 'OPTIONS'
-                        },
-                        {
-                            '@value': 'PATCH'
-                        },
-                        {
-                            '@value': 'POST'
-                        },
-                        {
-                            '@value': 'PUT'
-                        }
-                    ]
-                }
-            ]
-        },
         {
             '@id': rootUris.getRootUri(),
             '@type': [
-                'http://www.w3.org/2002/07/owl#Ontology'
+                'owl:Ontology'
             ]
         },
         {
             '@id': hyper('EntryPoint'),
             '@type': [
-                'http://www.w3.org/2002/07/owl#Class'
+                'owl:Class'
             ]
         },
         {
             '@id': hyper('Operation'),
             '@type': [
-                'http://www.w3.org/2002/07/owl#Class'
+                'owl:Class'
             ],
-            'http://www.w3.org/2000/01/rdf-schema#subClassOf': [
+            'rdfs:subClassOf': [
                 {
-                    '@id': 'http://www.w3.org/2002/07/owl#ObjectProperty'
+                    '@id': 'owl:ObjectProperty'
                 }
             ]
         },
         {
             '@id': hyper('expectedType'),
             '@type': [
-                'http://www.w3.org/2002/07/owl#ObjectProperty'
+                'owl:ObjectProperty'
             ],
-            'http://www.w3.org/2000/01/rdf-schema#domain': [
+            'rdfs:domain': [
                 {
                     '@id': hyper('Operation')
                 }
@@ -73,32 +41,26 @@ export const vocabulary = {
         {
             '@id': hyper('method'),
             '@type': [
-                'http://www.w3.org/2000/01/rdf-schema#Datatype',
-                'http://www.w3.org/2002/07/owl#DatatypeProperty',
-                'http://www.w3.org/2002/07/owl#FunctionalProperty'
+                'owl:DatatypeProperty',
+                'owl:FunctionalProperty'
             ],
-            'http://www.w3.org/2000/01/rdf-schema#domain': [
+            'rdfs:domain': [
                 {
                     '@id': hyper('Operation')
                 }
             ],
-            'http://www.w3.org/2000/01/rdf-schema#range': [
+            'rdfs:range': [
                 {
-                    '@id': hyper('method')
-                }
-            ],
-            'http://www.w3.org/2002/07/owl#equivalentClass': [
-                {
-                    '@id': '_:genid9'
+                    '@id': hyper('Method')
                 }
             ]
         },
         {
             '@id': hyper('returnedType'),
             '@type': [
-                'http://www.w3.org/2002/07/owl#ObjectProperty'
+                'owl:ObjectProperty'
             ],
-            'http://www.w3.org/2000/01/rdf-schema#domain': [
+            'rdfs:domain': [
                 {
                     '@id': hyper('Operation')
                 }
@@ -107,64 +69,104 @@ export const vocabulary = {
         {
             '@id': hyper('defaultMediaType'),
             '@type': [
-                'http://www.w3.org/2000/01/rdf-schema#Datatype',
-                'http://www.w3.org/2002/07/owl#DatatypeProperty'
+                'rdfs:Datatype',
+                'owl:DatatypeProperty'
             ],
-            'http://www.w3.org/2000/01/rdf-schema#domain': [
+            'rdfs:domain': [
                 {
                     '@id': hyper('EntryPoint')
                 }
             ],
-            'http://www.w3.org/2000/01/rdf-schema#range': [
+            'rdfs:range': [
                 {
-                    '@id': hyper('mediaType')
+                    '@id': hyper('MediaType')
                 }
             ]
         },
         {
             '@id': hyper('returnedMediaType'),
             '@type': [
-                'http://www.w3.org/2000/01/rdf-schema#Datatype',
-                'http://www.w3.org/2002/07/owl#DatatypeProperty'
+                'rdfs:Datatype',
+                'owl:DatatypeProperty'
             ],
-            'http://www.w3.org/2000/01/rdf-schema#domain': [
+            'rdfs:domain': [
                 {
                     '@id': hyper('Operation')
                 }
             ],
-            'http://www.w3.org/2000/01/rdf-schema#range': [
+            'rdfs:range': [
                 {
-                    '@id': hyper('mediaType')
+                    '@id': hyper('MediaType')
                 }
             ]
         },
         {
             '@id': hyper('expectedMediaType'),
             '@type': [
-                'http://www.w3.org/2000/01/rdf-schema#Datatype',
-                'http://www.w3.org/2002/07/owl#DatatypeProperty'
+                'rdfs:Datatype',
+                'owl:DatatypeProperty'
             ],
-            'http://www.w3.org/2000/01/rdf-schema#domain': [
+            'rdfs:domain': [
                 {
                     '@id': hyper('Operation')
                 }
             ],
-            'http://www.w3.org/2000/01/rdf-schema#range': [
+            'rdfs:range': [
                 {
-                    '@id': hyper('mediaType')
+                    '@id': hyper('MediaType')
                 }
             ]
         },
         {
-            '@id': hyper('mediaType'),
+            '@id': hyper('MediaType'),
             '@type': [
-                'http://www.w3.org/2000/01/rdf-schema#Datatype'
+                'rdfs:Datatype'
             ],
-            'http://www.w3.org/2002/07/owl#equivalentClass': [
+            'owl:equivalentClass': [
                 {
-                    '@id': 'http://www.w3.org/2001/XMLSchema#string'
+                    '@id': 'xsd:string'
+                }
+            ]
+        },
+        {
+            '@id': hyper('Method'),
+            '@type': [
+                'rdfs:Datatype'
+            ],
+            'owl:equivalentClass': [
+                {
+                    '@type': [
+                        'rdfs:Datatype'
+                    ],
+                    'owl:oneOf': [
+                        {
+                            '@list': [
+                                {
+                                    '@value': 'DELETE'
+                                },
+                                {
+                                    '@value': 'GET'
+                                },
+                                {
+                                    '@value': 'HEAD'
+                                },
+                                {
+                                    '@value': 'OPTIONS'
+                                },
+                                {
+                                    '@value': 'PATCH'
+                                },
+                                {
+                                    '@value': 'POST'
+                                },
+                                {
+                                    '@value': 'PUT'
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }
     ]
-};
+});
