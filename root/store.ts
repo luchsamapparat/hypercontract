@@ -1,4 +1,4 @@
-import { createOrGetStore } from '../store/quadStoreFactory';
+import { createOrGetStore } from '@hypercontract/hypercontract-shared';
 import { vocabulary } from './vocabulary';
 
 export function getVocabularyStore() {
