@@ -7,7 +7,7 @@ describe('server', () => {
         it('should return 200 OK', () => {
             return request(server)
                 .get('/')
-                .expect(200, 'Hello World!');
+                .expect(200, 'Hello World :-)');
         });
     });
 
