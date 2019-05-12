@@ -5,7 +5,7 @@ import { version } from 'pjson';
 const port = config.get('http.port');
 
 const headers = {
-    'X-Application-Version': `${version}-${config.get('application.buildId')}`
+    'X-Application-Version': `${version}-${config.get('application.buildName')}`
 };
 
 export const server = http

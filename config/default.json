@@ -1,6 +1,6 @@
 {
     "application": {
-        "buildId": "local"
+        "buildName": "local"
     },
     "http": {
         "port": 3000
