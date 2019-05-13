@@ -1,11 +1,10 @@
 import config from 'config';
 import * as http from 'http';
-import { version } from 'pjson';
 
 const port = config.get('http.port');
 
 const headers = {
-    'X-Application-Version': `${version}-${config.get('application.buildName')}`
+    'X-Application-Version': <string> config.get('application.buildName')
 };
 
 export const server = http

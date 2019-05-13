@@ -2,7 +2,7 @@ import request from 'supertest';
 import { server } from '.';
 
 describe('server', () => {
-    const expectedApplicationVersion = '1.0.0-test';
+    const expectedApplicationVersion = 'test';
 
     describe('GET /', () => {
         it('should return 200 OK', () => {
