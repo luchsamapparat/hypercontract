@@ -55,23 +55,13 @@ steps:
     verbose: false
     customCommand: 'run ci-build'
 
-- task: Docker@0
-  displayName: 'Build an image'
+- task: Docker@2
+  displayName: 'Build image and push to ACR'
   inputs:
-    azureSubscription: 'Nutzungsbasierte Zahlung (b2be2f9a-6dc9-49a0-9679-f7600ea3d523)'
-    azureContainerRegistry: '{"loginServer":"hypercontract.azurecr.io", "id" : "/subscriptions/b2be2f9a-6dc9-49a0-9679-f7600ea3d523/resourceGroups/hypercontract/providers/Microsoft.ContainerRegistry/registries/hypercontract"}'
-    imageName: '$(Build.Repository.Name)'
-    additionalImageTags: '$(application.buildName)'
-    includeSourceTags: true
-    includeLatestTag: true
-
-- task: Docker@0
-  displayName: 'Push an image'
-  inputs:
-    azureSubscription: 'Nutzungsbasierte Zahlung (b2be2f9a-6dc9-49a0-9679-f7600ea3d523)'
-    azureContainerRegistry: '{"loginServer":"hypercontract.azurecr.io", "id" : "/subscriptions/b2be2f9a-6dc9-49a0-9679-f7600ea3d523/resourceGroups/hypercontract/providers/Microsoft.ContainerRegistry/registries/hypercontract"}'
-    action: 'Push an image'
-    imageName: '$(Build.Repository.Name)'
-    additionalImageTags: '$(application.buildName)'
-    includeSourceTags: true
-    includeLatestTag: true
+    containerRegistry: 'ACR'
+    repository: 'hypercontract/hypercontract'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      latest
+      $(application.buildName)
